@@ -1,16 +1,38 @@
 const express = require('express');
+const session = require("express-session");
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const authorRoutes = require('./routes/authorRoute.js');
-const port = 8080;
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+const route = require('./routes/index');
+const verifyToken = require('./middleware/verifyToken');
 
+dotenv.config();
 
 const app = express();
+
 app.use(express.json());
+app.use(morgan('combined'));
 app.use(cors());
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+    if (req.path !== '/api/admin/login') {
+      verifyToken(req, res, next);
+    } else {
+      next();
+    }
+});
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(
+  session({
+    secret: "team2-uptech",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+  })
+);
 
-app.use('/api', authorRoutes.routes);
+app.use('/api', route);
 
-app.listen(port, () => console.log('App is listening in url http://localhost:' + port));
+app.listen(process.env.PORT, () => console.log('App is listening in url http://localhost:' + process.env.PORT));
 
