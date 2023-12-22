@@ -55,14 +55,24 @@ class CategoryController {
             };
 
             const imageUrl = [];
+            const keys = Object.keys(req.body);
+            if (keys.includes('status')){
+                if (data.status === 'false') {
+                    data.status = false;
+                }
+                else {
+                    data.status = true;
+                }
+
+            }
             await uploadFile(imageUrlReq, imageUrl);
             const category  = {
                 imageUrl: imageUrl,
                 name: data.name,
                 status: data.status,
             }
-            await db.collection('category').doc().set(category);
-            res.status(201).json({message: 'success'});
+           const newCategory = await db.collection('category').add(category);
+            res.status(201).json({message: 'success', data: { id: newCategory.id, ...category }});
         } catch (error) {
             res.status(500).json({message: 'fail', error: error.message});
         }
@@ -140,6 +150,7 @@ class CategoryController {
             }
         } catch (error) {
             res.status(500).json({message: 'fail', error:error.message});
+            console.log(error);
         }
     }
 
@@ -153,11 +164,16 @@ class CategoryController {
                 res.status(400).json({message: 'fail', error: 'Bad request'});
             }
             else {
+                const bookRef = await db.collection('book').where('categoryId','array-contains', category.id).get();
                 await db.collection('category').doc(categoryId).update({status: false});
+                for(const doc of bookRef.docs) {
+                    await db.collection('book').doc(doc.id).update({ status: false });
+                }
                 res.status(200).json({message: 'success'});
             }
         } catch (error) {
             res.status(500).json({message: 'fail', error: error.message});
+            console.log(error);
         }
     }
 }

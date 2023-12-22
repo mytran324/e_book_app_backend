@@ -24,10 +24,9 @@ class AuthorController {
     // api/author/add
     async addAuthor (req, res, next) {
         try {
-            console.log(req.body.fullName);
             const data = req.body;
-            await db.collection('author').doc().set(data);
-            res.status(201).json({message: 'success'});
+            const newAuthor = await db.collection('author').add(data);
+            res.status(201).json({message: 'success', data: { id: newAuthor.id, ...data}});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
