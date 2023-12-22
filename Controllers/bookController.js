@@ -1,4 +1,4 @@
-const {db, bucket, getDownloadURL} = require('../configs/connectDB');
+const {db, bucket, getDownloadURL, Timestamp} = require('../configs/connectDB');
 const Book = require('../models/Book');
 const Diacritics = require('diacritic');
 
@@ -10,7 +10,6 @@ class BookController {
             const data = await bookRef.get();
             const bookList = [];
             data.docs.forEach((doc) => {
-                console.log(doc.data().publishDate);
                 const book = new Book(
                     doc.id,
                     doc.data().authodId,
@@ -82,28 +81,39 @@ class BookController {
 
 
             await Promise.all([
-            uploadFile(bookReviewReq, bookReview),
-            uploadFile(imageUrlReq, imageUrlBook),
+                uploadFile(bookReviewReq, bookReview),
+                uploadFile(imageUrlReq, imageUrlBook),
             ]);
+            const timestampValue = Timestamp.now();
+            const author = data.authodId;
+            let authorId;
+            const authorRef = await db.collection('author').where('fullName','==', author).get();
+            if (authorRef.empty){
+                const newAuthor = await db.collection('author').add({fullName: author, status: true});
+                authorId = newAuthor.id;
+            } else {
+                authorRef.forEach((doc) => authorId = doc.id);
+            }
             const book = {
-                authodId: data.authodId,
+                authodId: authorId,
                 bookReview: bookReview,
-                categoryId: data.categoryId,
-                chapters: data.chapters,
+                categoryId: data.categoryId.split(','),
+                chapters: parseInt(data.chapters, 10),
                 country: data.country,
                 description: data.description,
                 imageUrl: imageUrlBook,
                 language: data.language,
-                price: data.price,
-                publishDate: data.publishDate,
-                status: data.status,
+                price: 0,
+                publishDate: timestampValue,
+                status: false,
                 title: data.title,
             }
-            await db.collection('book').doc().set(book);
+            const newBook = await db.collection('book').add(book);
 
-            res.status(201).json({message: 'success'});
+            res.status(201).json({message: 'success', data: {id: newBook.id,...book}});
         } catch (error){
             res.status(500).json({message: 'fail', error: error.message});
+            console.log(error);
         }
     }
 
@@ -201,7 +211,7 @@ class BookController {
     // api/book/delete
     async deleteBook(req, res, next) {
         try {
-            const bookId = req.query;
+            const {bookId} = req.query;
             const book = await db.collection('book').doc(bookId).get();
             if (!book.exists) {
                 res.status(400).json({message: 'fail', error: "Bad request"});
@@ -213,7 +223,54 @@ class BookController {
                 await db.collection('book').doc(bookId).update(data);
                 res.status(200).json({message: 'success'});
             }
-        } catch { 
+        } catch (error){ 
+            res.status(500).json({message: 'fail', error: error.message});
+        }
+    }
+
+    // api/book/remove
+    async removeBook(req, res, next) {
+        try {
+            const {bookId} = req.query;
+            const book = await db.collection('book').doc(bookId).get();
+            if (!book.exists) {
+                res.status(400).json({message: 'fail', error: "Bad request"});
+            }
+            else {
+                await db.collection('book').doc(bookId).delete();
+                res.status(200).json({message: 'success'});
+            }
+        } catch (error) {
+            res.status(500).json({message: 'fail', error: error.message});
+        }
+    }
+    // api/book/topBook
+    async viewBooks (req, res, next) {
+        try {
+            const booksSnapshot = await db.collection('book').get();
+            const bookViews = [];
+
+            for (const bookDoc of booksSnapshot.docs) {
+                const bookViewSnapshot = await db.collection('histories').where('chapters', '==', bookDoc.id).get();
+                const bookView = {
+                    bookId: bookDoc.id,
+                    views: bookViewSnapshot.size,
+                }
+                bookViews.push(bookView);
+            }
+            res.status(200).json({message: 'success', data: bookViews});
+        } catch (error) {
+            res.status(500).json({message: 'fail', error: error.message});
+        }
+    }
+
+    // api/book/totalView
+    async totalViews (req, res, next) {
+        try {
+            const histories = await db.collection('histories').get();
+            console.log(histories);
+            res.status(200).json({message: 'success', data:{totalViews: histories.size}});
+        } catch (error) {
             res.status(500).json({message: 'fail', error: error.message});
         }
     }

@@ -11,9 +11,9 @@ dotenv.config();
 
 const app = express();
 
+app.use(cors({credentials: true, origin: true}));
 app.use(express.json());
 app.use(morgan('combined'));
-app.use(cors());
 app.use(bodyParser.json());
 app.use((req, res, next) => {
     if (req.path !== '/api/admin/login') {
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(
   session({
-    secret: "team2-uptech",
+    secret: "team11_ebook",
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: oneDay },
