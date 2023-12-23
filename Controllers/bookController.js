@@ -96,12 +96,12 @@ class BookController {
             }
             const book = {
                 authodId: authorId,
-                bookReview: bookReview,
+                bookPreview: bookReview,
                 categoryId: data.categoryId.split(','),
                 chapters: parseInt(data.chapters, 10),
                 country: data.country,
                 description: data.description,
-                imageUrl: imageUrlBook,
+                imageUrl: imageUrlBook[0],
                 language: data.language,
                 price: 0,
                 publishDate: timestampValue,
