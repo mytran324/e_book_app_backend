@@ -1,4 +1,4 @@
-const {db} = require('../configs/connectDB');
+const {db, auth} = require('../configs/connectDB');
 const User = require('../models/User');
 
 class UserController {
@@ -35,6 +35,9 @@ class UserController {
             if (!user) {
                 res.status(400).json({message: 'fail', error: 'Bad request'});
             } else {
+                auth.updateUser(userId, {
+                    disabled: true,
+                  });
                 await db.collection('user').doc(userId).update({status: false});
                 res.status(200).json({message: 'success'});
             }
