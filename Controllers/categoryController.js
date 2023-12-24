@@ -67,7 +67,7 @@ class CategoryController {
             }
             await uploadFile(imageUrlReq, imageUrl);
             const category  = {
-                imageUrl: imageUrl,
+                imageUrl: imageUrl[0],
                 name: data.name,
                 status: data.status,
             }
