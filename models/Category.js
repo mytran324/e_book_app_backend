@@ -1,10 +1,10 @@
 class Category {
-    constructor(id, name, status, imageUrl) {
-        this.id = id,
-        this.name = name,
-        this.status = status,
-        this.imageUrl = imageUrl
-    }
+  constructor(id, name, status, imageUrl) {
+    (this.id = id),
+      (this.name = name),
+      (this.status = status),
+      (this.imageUrl = imageUrl);
+  }
 }
 
 module.exports = Category;
