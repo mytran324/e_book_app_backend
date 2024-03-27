@@ -1,5 +1,5 @@
-const { db, auth } = require("../configs/connectDB");
-const User = require("../models/User");
+import { db, auth } from "../configs/connectDB.js";
+import User from "../models/User.js";
 
 class UserController {
   async getAllUser(req, res, next) {
@@ -50,4 +50,4 @@ class UserController {
     }
   }
 }
-module.exports = new UserController();
+export default new UserController();

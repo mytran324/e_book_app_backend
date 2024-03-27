@@ -1,5 +1,5 @@
-const { db, bucket, getDownloadURL } = require("../configs/connectDB");
-const Category = require("../models/Category");
+import { db, bucket, getDownloadURL } from "../configs/connectDB.js";
+import Category from "../models/Category.js";
 
 class CategoryController {
   // api/category
@@ -182,4 +182,4 @@ class CategoryController {
   }
 }
 
-module.exports = new CategoryController();
+export default new CategoryController();

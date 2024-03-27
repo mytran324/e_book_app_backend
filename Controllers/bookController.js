@@ -1,11 +1,6 @@
-const {
-  db,
-  bucket,
-  getDownloadURL,
-  Timestamp,
-} = require("../configs/connectDB");
-const Book = require("../models/Book");
-const Diacritics = require("diacritic");
+import { db, bucket, getDownloadURL, Timestamp } from "../configs/connectDB.js";
+import Book from "../models/Book.js";
+import diacritic from "diacritic";
 
 class BookController {
   // api/book
@@ -53,7 +48,7 @@ class BookController {
       const bookReview = [];
       const imageUrlBook = [];
 
-      const folderName = Diacritics.clean(data.title.split(" ").join(""));
+      const folderName = diacritic.clean(data.title.split(" ").join(""));
 
       if (
         !bookReviewReq ||
@@ -299,4 +294,4 @@ class BookController {
   }
 }
 
-module.exports = new BookController();
+export default new BookController();

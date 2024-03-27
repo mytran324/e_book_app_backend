@@ -19,4 +19,4 @@ class User {
     this.status = status;
   }
 }
-module.exports = User;
+export default User;

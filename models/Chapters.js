@@ -3,4 +3,4 @@ class Chapters {
     (this.id = id), (this.bookId = bookId), (this.chapterList = chapterList);
   }
 }
-module.exports = Chapters;
+export default Chapters;

@@ -1,5 +1,5 @@
-const { db } = require("../configs/connectDB");
-const Chapters = require("../models/Chapters");
+import { db } from "../configs/connectDB.js";
+import Chapters from "../models/Chapters.js";
 
 class ChaptersController {
   // api/chapters/get
@@ -43,4 +43,4 @@ class ChaptersController {
   }
 }
 
-module.exports = new ChaptersController();
+export default new ChaptersController();

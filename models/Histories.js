@@ -3,4 +3,4 @@ class Histories {
     (this.uId = uId), (this.chapters = chapters), (this.percent = percent);
   }
 }
-module.exports = Histories;
+export default Histories;

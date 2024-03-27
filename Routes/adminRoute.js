@@ -1,6 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const adminController = require("../controllers/adminController");
+import { Router } from "express";
+import adminController from "../Controllers/adminController.js";
+const router = Router();
 /**
  * @openapi
  * tags:
@@ -59,4 +59,4 @@ router.get("/profile/", adminController.getProfile);
  */
 router.post("/login/", adminController.loginAdmin);
 
-module.exports = router;
+export default router;

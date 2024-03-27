@@ -1,10 +1,10 @@
-const express = require("express");
-const categoryController = require("../controllers/categoryController");
-const multer = require("multer");
+import { Router } from "express";
+import categoryController from "../controllers/categoryController.js";
+import multer, { memoryStorage } from "multer";
 
-const router = express.Router();
+const router = Router();
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: memoryStorage() });
 /**
  * @openapi
  * tags:
@@ -99,4 +99,4 @@ router.put(
 );
 router.put("/delete/", categoryController.deleteCategory);
 
-module.exports = router;
+export default router;

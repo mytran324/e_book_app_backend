@@ -3,4 +3,4 @@ class Libraries {
     (this.bookId = bookId), (this.userId = userId);
   }
 }
-module.exports = Libraries;
+export default Libraries;

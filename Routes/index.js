@@ -1,11 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const adminRoutes = require("./adminRoute");
-const authorRoutes = require("./authorRoute");
-const bookRoutes = require("./bookRoute");
-const categoryRoutes = require("./categoryRoute");
-const chaptersRoutes = require("./chaptersRoute");
-const userRoutes = require("./userRoute");
+import { Router } from "express";
+import adminRoutes from "./adminRoute.js";
+import authorRoutes from "./authorRoute.js";
+import bookRoutes from "./bookRoute.js";
+import categoryRoutes from "./categoryRoute.js";
+import chaptersRoutes from "./chaptersRoute.js";
+import userRoutes from "./userRoute.js";
+const router = Router();
 
 router.use("/admin", adminRoutes);
 router.use("/author", authorRoutes);
@@ -14,4 +14,4 @@ router.use("/category", categoryRoutes);
 router.use("/chapters", chaptersRoutes);
 router.use("/user", userRoutes);
 
-module.exports = router;
+export default router;

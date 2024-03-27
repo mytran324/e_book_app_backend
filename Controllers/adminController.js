@@ -1,7 +1,8 @@
-const { db } = require("../configs/connectDB");
-const Admin = require("../models/Admin");
-const createToken = require("../middleware/createToken");
-const HttpStatusCode  = require("../Exception/HttpStatusCode");
+import { db } from "../configs/connectDB.js"; 
+import Admin from "../models/Admin.js"; 
+import createToken from "../middleware/createToken.js";
+import HttpStatusCode from "../Exception/HttpStatusCode.js";
+
 class AdminController {
   // api/admin/profile
   async getProfile(req, res, next) {
@@ -72,4 +73,5 @@ class AdminController {
     }
   }
 }
-module.exports = new AdminController();
+
+export default new AdminController();

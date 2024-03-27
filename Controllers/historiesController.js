@@ -1,1 +1,1 @@
-const {db} = require('../configs/connectDB');
+import { db } from '../configs/connectDB.js';
