@@ -12,13 +12,18 @@ const adminController = require("../controllers/adminController");
  * /api/admin/profile:
  *   get:
  *     tags: [Admin]
- *     summary: Lấy thông tin hồ sơ admin
- *     description: Lấy thông tin hồ sơ của admin từ cơ sở dữ liệu.
+ *     description: get profile Admin
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: Thông tin hồ sơ admin đã được lấy thành công.
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
  */
 router.get("/profile/", adminController.getProfile);
 /**
@@ -26,8 +31,7 @@ router.get("/profile/", adminController.getProfile);
  * /api/admin/login:
  *   post:
  *     tags: [Admin]
- *     summary: Đăng nhập admin
- *     description: Xác thực thông tin đăng nhập của admin.
+ *     description: Login admin
  *     produces:
  *       - application/json
  *     requestBody:
@@ -39,17 +43,19 @@ router.get("/profile/", adminController.getProfile);
  *              properties:
  *                  email:
  *                      type: string
- *                      description: The user's email.
+ *                      description: The admin's email.
  *                      example: mytran20110324@gmail.com
  *                  password:
  *                      type: string
- *                      description: The user's password.
+ *                      description: The admin's password.
  *                      example: My123456@
  *     responses:
  *       200:
- *         description: Đăng nhập thành công.
- *       401:
- *         description: Đăng nhập thất bại.
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
 router.post("/login/", adminController.loginAdmin);
 

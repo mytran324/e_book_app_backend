@@ -83,7 +83,7 @@ class AuthorController {
   async deleteAuthor(req, res, next) {
     try {
       const { authorId } = req.query;
-
+      console.log(authorId);
       const author = await db.collection("author").doc(authorId).get();
       if (!author.exists) {
         res.status(400).json({ error: "Bad request" });
