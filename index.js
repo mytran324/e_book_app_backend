@@ -1,15 +1,15 @@
-const express = require("express");
-const session = require("express-session");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const dotenv = require("dotenv");
-const route = require("./routes/index");
-const verifyToken = require("./middleware/verifyToken");
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsdoc = require("swagger-jsdoc");
+import express from "express";
+import session from "express-session";
+import cors from "cors";
+import bodyParser from 'body-parser';
+import morgan from "morgan";
+import { config } from "dotenv";
+import route from "./Routes/index.js";
+import verifyToken from "./middleware/verifyToken.js";
+import { serve, setup } from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
 
-dotenv.config();
+config();
 
 const app = express();
 
@@ -63,7 +63,7 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", serve, setup(swaggerSpec));
 app.get("/swagger.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(JSON.stringify(swaggerDocs, null, 2));

@@ -7,4 +7,4 @@ class Review {
       (this.userId = userId);
   }
 }
-module.exports = Review;
+export default Review;

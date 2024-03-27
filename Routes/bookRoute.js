@@ -1,9 +1,9 @@
-const express = require("express");
-const bookController = require("../controllers/bookController");
-const multer = require("multer");
-const router = express.Router();
+import { Router } from "express";
+import bookController from "../Controllers/bookController.js";
+import multer, { memoryStorage } from "multer";
+const router = Router();
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: memoryStorage() });
 /**
  * @openapi
  * tags:
@@ -161,4 +161,4 @@ router.get("/totalViews", bookController.totalViews);
 router.put("/delete/", bookController.deleteBook);
 router.delete("/remove/", bookController.removeBook);
 
-module.exports = router;
+export default router;

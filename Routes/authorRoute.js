@@ -1,6 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const authorController = require("../controllers/authorController");
+import { Router } from "express";
+import authorController from "../controllers/authorController.js";
+const router = Router();
 /**
  * @openapi
  * tags:
@@ -146,4 +146,4 @@ router.put("/update/", authorController.updateAuthor);
  *         description: Internal server error
  */
 router.put("/delete/", authorController.deleteAuthor);
-module.exports = router;
+export default router;

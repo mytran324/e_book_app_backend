@@ -1,8 +1,8 @@
-const express = require("express");
-const chaptersController = require("../controllers/chaptersController");
-const router = express.Router();
+import { Router } from "express";
+import chaptersController from "../controllers/chaptersController.js";
+const router = Router();
 
 router.get("/", chaptersController.getChapters);
 router.post("/add/", chaptersController.addChapters);
 
-module.exports = router;
+export default router;

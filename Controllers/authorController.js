@@ -1,5 +1,5 @@
-const { db } = require("../configs/connectDB");
-const Author = require("../models/Author");
+import { db } from "../configs/connectDB.js";
+import Author from "../models/Author.js";
 
 class AuthorController {
   // api/author (get all)
@@ -16,13 +16,11 @@ class AuthorController {
         );
         authorList.push(author);
       });
-      res
-        .status(200)
-        .json({
-          Headers: { "Content-Type": "application/json" },
-          message: "success",
-          data: authorList,
-        });
+      res.status(200).json({
+        Headers: { "Content-Type": "application/json" },
+        message: "success",
+        data: authorList,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -32,9 +30,7 @@ class AuthorController {
     try {
       const data = req.body;
       const newAuthor = await db.collection("author").add(data);
-      res
-        .status(201)
-        .json({ message: "success", data: { id: newAuthor.id, ...data } });
+      res.status(201).json({ message: "success", data: { id: newAuthor.id, ...data } });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -98,4 +94,4 @@ class AuthorController {
   }
 }
 
-module.exports = new AuthorController();
+export default new AuthorController();
