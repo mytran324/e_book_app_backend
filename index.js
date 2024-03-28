@@ -4,8 +4,8 @@ import cors from "cors";
 import bodyParser from 'body-parser';
 import morgan from "morgan";
 import { config } from "dotenv";
-import route from "./Routes/index.js";
-import verifyToken from "./middleware/verifyToken.js";
+import route from "./src/Routes/index.js";
+import verifyToken from "./src/middleware/verifyToken.js";
 import { serve, setup } from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 
@@ -59,14 +59,14 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./Routes/*.js"], // Đường dẫn đến các file chứa API routes
+  apis: ["./src/Routes/*.js"], // Đường dẫn đến các file chứa API routes
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", serve, setup(swaggerSpec));
 app.get("/swagger.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  res.send(JSON.stringify(swaggerDocs, null, 2));
+  res.send(JSON.stringify(swaggerJsdoc, null, 2));
 });
 console.log(`Docs available at http://localhost:${process.env.PORT}/api-docs`);
 app.listen(process.env.PORT, () => {

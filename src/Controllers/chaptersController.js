@@ -1,4 +1,4 @@
-import { db } from "../configs/connectDB.js";
+import { db } from "../Configs/connectDB.js";
 import Chapters from "../models/Chapters.js";
 
 class ChaptersController {

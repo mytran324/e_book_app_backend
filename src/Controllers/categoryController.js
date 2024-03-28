@@ -1,4 +1,4 @@
-import { db, bucket, getDownloadURL } from "../configs/connectDB.js";
+import { db, bucket, getDownloadURL } from "../Configs/connectDB.js";
 import Category from "../models/Category.js";
 
 class CategoryController {

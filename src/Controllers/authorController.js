@@ -1,4 +1,4 @@
-import { db } from "../configs/connectDB.js";
+import { db } from "../Configs/connectDB.js";
 import Author from "../models/Author.js";
 
 class AuthorController {

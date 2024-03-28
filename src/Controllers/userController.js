@@ -1,4 +1,4 @@
-import { db, auth } from "../configs/connectDB.js";
+import { db, auth } from "../Configs/connectDB.js";
 import User from "../models/User.js";
 
 class UserController {
