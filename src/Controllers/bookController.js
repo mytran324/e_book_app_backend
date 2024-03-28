@@ -1,4 +1,4 @@
-import { db, bucket, getDownloadURL, Timestamp } from "../configs/connectDB.js";
+import { db, bucket, getDownloadURL, Timestamp } from "../Configs/connectDB.js";
 import Book from "../models/Book.js";
 import diacritic from "diacritic";
 

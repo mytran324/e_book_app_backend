@@ -1,4 +1,4 @@
-import { db } from "../configs/connectDB.js"; 
+import { db } from "../Configs/connectDB.js"; 
 import Admin from "../models/Admin.js"; 
 import createToken from "../middleware/createToken.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
