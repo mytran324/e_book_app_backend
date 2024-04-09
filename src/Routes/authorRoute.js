@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authorController from "../controllers/authorController.js";
+import authorController from "../Controllers/authorController.js";
 const router = Router();
 /**
  * @openapi

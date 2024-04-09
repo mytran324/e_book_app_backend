@@ -1,7 +1,8 @@
-import { db } from "../Configs/connectDB.js"; 
-import Admin from "../models/Admin.js"; 
+import { db } from "../Configs/connectDB.js";
+import Admin from "../models/Admin.js";
 import createToken from "../middleware/createToken.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
+import Exception from "../Exception/Exception.js";
 
 class AdminController {
   // api/admin/profile
@@ -21,7 +22,9 @@ class AdminController {
         res.status(HttpStatusCode.OK).json({ message: "success", data: admin });
       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: error.message });
     }
   }
 
