@@ -1,5 +1,5 @@
 import { Router } from "express";
-import categoryController from "../controllers/categoryController.js";
+import categoryController from "../Controllers/categoryController.js";
 import multer, { memoryStorage } from "multer";
 
 const router = Router();
