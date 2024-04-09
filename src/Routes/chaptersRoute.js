@@ -1,5 +1,5 @@
 import { Router } from "express";
-import chaptersController from "../controllers/chaptersController.js";
+import chaptersController from "../Controllers/chaptersController.js";
 const router = Router();
 
 router.get("/", chaptersController.getChapters);
