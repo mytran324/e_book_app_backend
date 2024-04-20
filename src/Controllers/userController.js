@@ -49,7 +49,7 @@ class UserController {
   }
   async deleteUnverifiedUsers() {
     try {
-      const hourAgo = Date.now(); // 1 giờ trước
+      const hourAgo = Date.now()+ (55 * 60 * 1000); // 1 giờ trước
       const listUsers = await auth.listUsers();
       listUsers.users.forEach(async (userRecord) => {
         const creationTimestamp = new Date(
