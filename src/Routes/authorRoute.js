@@ -124,7 +124,7 @@ router.put("/update/", authorController.updateAuthor);
 /**
  * @openapi
  * /api/author/delete:
- *   put:
+ *   delete:
  *     tags: [Author]
  *     description: Delete author
  *     produces:
@@ -145,5 +145,5 @@ router.put("/update/", authorController.updateAuthor);
  *       500:
  *         description: Internal server error
  */
-router.put("/delete/", authorController.deleteAuthor);
+router.delete("/delete/", authorController.deleteAuthor);
 export default router;
