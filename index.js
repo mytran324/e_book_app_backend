@@ -8,6 +8,9 @@ import route from "./src/Routes/index.js";
 import verifyToken from "./src/middleware/verifyToken.js";
 import { serve, setup } from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import schedule from 'node-schedule';
+import userController from "./src/Controllers/userController.js";
+
 
 config();
 
@@ -24,6 +27,7 @@ app.use((req, res, next) => {
     next();
   }
 });
+schedule.scheduleJob('* * * * *', userController.deleteUnverifiedUsers);
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(
   session({
@@ -35,7 +39,6 @@ app.use(
 );
 
 app.use("/api", route);
-
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",

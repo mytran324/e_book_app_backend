@@ -1,4 +1,4 @@
-import { db, auth } from "../Configs/connectDB.js";
+import { db, auth, Timestamp } from "../Configs/connectDB.js";
 import User from "../models/User.js";
 
 class UserController {
@@ -20,13 +20,11 @@ class UserController {
         );
         userList.push(user);
       });
-      res
-        .status(200)
-        .json({
-          Headers: { "Content-Type": "application/json" },
-          message: "success",
-          data: userList,
-        });
+      res.status(200).json({
+        Headers: { "Content-Type": "application/json" },
+        message: "success",
+        data: userList,
+      });
     } catch (error) {
       res.status(500).json({ message: "fail", error: error.message });
     }
@@ -47,6 +45,23 @@ class UserController {
       }
     } catch (error) {
       res.status(500).json({ message: "fail", error: error.message });
+    }
+  }
+  async deleteUnverifiedUsers() {
+    try {
+      const hourAgo = Date.now(); // 1 giờ trước
+      const listUsers = await auth.listUsers();
+      listUsers.users.forEach(async (userRecord) => {
+        const creationTimestamp = new Date(
+          userRecord.metadata.creationTime
+        ).getTime();
+        if (!userRecord.emailVerified && creationTimestamp < hourAgo) {
+          await auth.deleteUser(userRecord.uid);
+          console.log(`Đã xóa người dùng ${userRecord.uid}`);
+        }
+      });
+    } catch (error) {
+      console.error("Lỗi khi xóa người dùng:", error);
     }
   }
 }
