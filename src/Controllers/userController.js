@@ -49,13 +49,12 @@ class UserController {
   }
   async deleteUnverifiedUsers() {
     try {
-      const hourAgo = Date.now()+ (55 * 60 * 1000); // 1 giờ trước
+      const hourAgo = new Date();
+      hourAgo.setHours(hourAgo.getHours() - 1);
       const listUsers = await auth.listUsers();
       listUsers.users.forEach(async (userRecord) => {
-        const creationTimestamp = new Date(
-          userRecord.metadata.creationTime
-        ).getTime();
-        if (!userRecord.emailVerified && creationTimestamp < hourAgo) {
+        const createtime = new Date(userRecord.metadata.creationTime);
+        if (!userRecord.emailVerified && createtime < hourAgo) {
           await auth.deleteUser(userRecord.uid);
           console.log(`Đã xóa người dùng ${userRecord.uid}`);
         }
