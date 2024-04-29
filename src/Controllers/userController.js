@@ -4,7 +4,7 @@ import User from "../models/User.js";
 class UserController {
   async getAllUser(req, res, next) {
     try {
-      const userRef = await db.collection("user");
+      const userRef = await db.collection("users");
       const data = await userRef.get();
       const userList = [];
       data.docs.forEach((doc) => {
@@ -40,7 +40,7 @@ class UserController {
         auth.updateUser(userId, {
           disabled: true,
         });
-        await db.collection("user").doc(userId).update({ status: false });
+        await db.collection("users").doc(userId).update({ status: false });
         res.status(200).json({ message: "success" });
       }
     } catch (error) {
