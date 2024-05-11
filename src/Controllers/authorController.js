@@ -30,7 +30,9 @@ class AuthorController {
     try {
       const data = req.body;
       const newAuthor = await db.collection("author").add(data);
-      res.status(201).json({ message: "success", data: { id: newAuthor.id, ...data } });
+      res
+        .status(201)
+        .json({ message: "success", data: { id: newAuthor.id, ...data } });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -10,12 +10,9 @@ class UserController {
       data.docs.forEach((doc) => {
         const user = new User(
           doc.id,
-          doc.data().fullName,
+          doc.data().displayName,
           doc.data().email,
-          doc.data().imageUrl,
-          doc.data().passWord,
-          doc.data().phoneNumber,
-          doc.data().provider,
+          doc.data().photoUrl,
           doc.data().status
         );
         userList.push(user);
@@ -33,7 +30,7 @@ class UserController {
   async blockUser(req, res, next) {
     try {
       const { userId } = req.query;
-      const user = await db.collection("user").doc(userId).get();
+      const user = await db.collection("users").doc(userId).get();
       if (!user) {
         res.status(400).json({ message: "fail", error: "Bad request" });
       } else {

@@ -1,21 +1,15 @@
 class User {
   constructor(
     id,
-    fullName,
+    displayName,
     email,
-    imageUrl,
-    passWord,
-    phoneNumber,
-    provider,
+    photoUrl,
     status
   ) {
     this.id = id;
-    this.fullName = fullName;
+    this.displayName = displayName;
     this.email = email;
-    this.imageUrl = imageUrl;
-    this.passWord = passWord;
-    this.phoneNumber = phoneNumber;
-    this.provider = provider;
+    this.photoUrl = photoUrl;
     this.status = status;
   }
 }
