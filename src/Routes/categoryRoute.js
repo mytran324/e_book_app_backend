@@ -8,14 +8,14 @@ const upload = multer({ storage: memoryStorage() });
 /**
  * @openapi
  * tags:
- *   name: Categotry
+ *   name: Category
  *   description: API for Author operations
  */
 /**
  * @openapi
  * /api/category:
  *   get:
- *     tags: [Categotry]
+ *     tags: [Category]
  *     description: Get list category
  *     produces:
  *       - application/json
@@ -30,6 +30,31 @@ const upload = multer({ storage: memoryStorage() });
  *         description: Internal server error
  */
 router.get("/", categoryController.getAllCategory);
+/**
+ * @openapi
+ * /api/category/get:
+ *   get:
+ *     tags: [Category]
+ *     description: Get information category
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: categoryId
+ *         in: query
+ *         required: false
+ *         schema:
+ *            type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/get/", categoryController.getCategory);
 /**
  * @openapi
  * /api/category/add:
@@ -57,7 +82,7 @@ router.get("/", categoryController.getAllCategory);
  *                      type: boolean
  *                      description: the category's status
  *     responses:
- *       200:
+ *       201:
  *         description: Success
  *       400:
  *         description: Bad request
@@ -67,31 +92,7 @@ router.get("/", categoryController.getAllCategory);
  *         description: Internal server error
  */
 router.post("/add/", upload.single("imageUrl"), categoryController.addCategory);
-/**
- * @openapi
- * /api/category/get:
- *   get:
- *     tags: [Category]
- *     description: Get information category
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: categoryId
- *         in: query
- *         required: false
- *         schema:
- *            type: string
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Internal server error
- */
-router.get("/get/", categoryController.getCategory);
+
 router.put(
   "/update/",
   upload.single("imageUrl"),
