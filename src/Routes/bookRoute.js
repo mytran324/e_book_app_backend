@@ -29,6 +29,72 @@ const upload = multer({ storage: memoryStorage() });
  *         description: Internal server error
  */
 router.get("/", bookController.getAllBook);
+
+/**
+ * @openapi
+ * /api/book/get:
+ *   get:
+ *     tags: [Book]
+ *     description: Get information book
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: bookId
+ *         in: query
+ *         required: false
+ *         schema:
+ *            type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/get/", bookController.getBook);
+/**
+ * @openapi
+ * /api/book/viewBooks:
+ *   get:
+ *     tags: [Book]
+ *     description: Get books's views
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/viewBooks", bookController.viewBooks);
+/**
+ * @openapi
+ * /api/book/totalViews:
+ *   get:
+ *     tags: [Book]
+ *     description: Get total views
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/totalViews", bookController.totalViews);
+router.put("/delete/", bookController.deleteBook);
+router.delete("/remove/", bookController.removeBook);
 /**
  * @openapi
  * /api/book/add:
@@ -95,70 +161,4 @@ router.post(
   upload.fields([{ name: "bookReview" }, { name: "imageUrl" }]),
   bookController.addBook
 );
-/**
- * @openapi
- * /api/book/get:
- *   get:
- *     tags: [Book]
- *     description: Get information book
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: bookId
- *         in: query
- *         required: false
- *         schema:
- *            type: string
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Internal server error
- */
-router.get("/get/", bookController.getBook);
-/**
- * @openapi
- * /api/book/viewBooks:
- *   get:
- *     tags: [Book]
- *     description: Get books's views
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Internal server error
- */
-router.get("/viewBooks", bookController.viewBooks);
-/**
- * @openapi
- * /api/book/totalViews:
- *   get:
- *     tags: [Book]
- *     description: Get total views
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Internal server error
- */
-router.get("/totalViews", bookController.totalViews);
-router.put("/delete/", bookController.deleteBook);
-router.delete("/remove/", bookController.removeBook);
-
 export default router;

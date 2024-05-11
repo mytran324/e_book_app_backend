@@ -28,6 +28,31 @@ const router = Router();
 router.get("/", authorController.getAllAuthor);
 /**
  * @openapi
+ * /api/author/get:
+ *   get:
+ *     tags: [Author]
+ *     description: Get author
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: authorId
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: String
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/get/", authorController.getAuthor);
+/**
+ * @openapi
  * /api/author/add:
  *   post:
  *     tags: [Author]
@@ -60,31 +85,7 @@ router.get("/", authorController.getAllAuthor);
  *         description: Internal server error
  */
 router.post("/add/", authorController.addAuthor);
-/**
- * @openapi
- * /api/author/get:
- *   get:
- *     tags: [Author]
- *     description: Get author
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: authorId
- *         in: query
- *         required: false
- *         schema:
- *           type: String
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Internal server error
- */
-router.get("/get/", authorController.getAuthor);
+
 /**
  * @openapi
  * /api/author/update:
@@ -97,7 +98,7 @@ router.get("/get/", authorController.getAuthor);
  *       - name: authorId
  *         in: query
  *         required: false
- *         schema: 
+ *         schema:
  *           type: String
  *     requestBody:
  *       required: true
@@ -133,7 +134,7 @@ router.put("/update/", authorController.updateAuthor);
  *       - name: authorId
  *         in: query
  *         required: false
- *         schema: 
+ *         schema:
  *           type: String
  *     responses:
  *       200:
