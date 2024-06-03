@@ -9,7 +9,7 @@ const upload = multer({ storage: memoryStorage() });
  * @openapi
  * tags:
  *   name: Category
- *   description: API for Author operations
+ *   description: API for Category operations
  */
 /**
  * @openapi

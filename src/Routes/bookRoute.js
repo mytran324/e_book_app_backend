@@ -8,7 +8,7 @@ const upload = multer({ storage: memoryStorage() });
  * @openapi
  * tags:
  *   name: Book
- *   description: API for Author operations
+ *   description: API for Book operations
  */
 /**
  * @openapi
