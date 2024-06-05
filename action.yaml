@@ -1,12 +1,12 @@
 name: 'Template Render'
 description: 'Render template files in GitHub Actions'
 inputs:
-  datafile:
+  service-id:
     description: 'The data to render the templates'
-    required: false
-  files:
+    required: true
+  api-key:
     description: 'The list of templates to render'
-    required: false
+    required: true
 
 branding:
   icon: 'activity'  
