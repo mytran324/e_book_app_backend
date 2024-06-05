@@ -14,7 +14,4 @@ inputs:
     default: true
 runs:
   using: 'node20'
-  main: 'dist/index.js'
-branding:
-  icon: 'play-circle'
-  color: 'purple'
+  main: 'index.js'
