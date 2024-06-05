@@ -37,7 +37,7 @@ jobs:
 
     steps: 
       - name: Deploy to production
-        uses: mytran324/e_book_app_backend@latest
+        uses: mytran324/e_book_app_backend@main
         with:
           service-id: ${{ secrets.SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
