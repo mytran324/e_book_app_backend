@@ -3,6 +3,7 @@ import Admin from "../models/Admin.js";
 import createToken from "../middleware/createToken.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import Exception from "../Exception/Exception.js";
+import { STATUS } from "../Global/Constants.js";
 
 class AdminController {
   // api/admin/profile
@@ -10,7 +11,7 @@ class AdminController {
     try {
       const data = await db.collection("admin").doc(req.user.id).get();
       if (!data.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({status: STATUS.FAIL, error: "Bad request" });
       } else {
         const admin = new Admin(
           data.id,
@@ -19,12 +20,14 @@ class AdminController {
           data.data().passWord,
           data.data().status
         );
-        res.status(HttpStatusCode.OK).json({ message: "success", data: admin });
+        res
+          .status(HttpStatusCode.OK)
+          .json({ status: STATUS.SUCCESS, message: "Get profile admin successfully", responseData: admin });
       }
     } catch (error) {
       res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({ error: error.message });
+        .json({ status: STATUS.FAIL, error: error.message });
     }
   }
 
@@ -41,8 +44,8 @@ class AdminController {
 
       if (auth.empty) {
         return res
-          .status(400)
-          .json({ message: "fail", error: "Email or password is incorrect" });
+          .status(HttpStatusCode.BAD_REQUEST)
+          .json({ status: STATUS.FAIL, error: Exception.WRONG_EMAIL_OR_PASSWORD });
       }
 
       let admin;
@@ -62,17 +65,18 @@ class AdminController {
         .get();
       if (passwordMatch.empty) {
         return res
-          .status(400)
-          .json({ message: "fail", error: "Email or password is incorrect" });
+          .status(HttpStatusCode.BAD_REQUEST)
+          .json({ status: STATUS.FAIL, error: Exception.WRONG_EMAIL_OR_PASSWORD });
       }
 
       let token = createToken(admin);
-      res.status(200).json({
-        message: "success",
-        token: token,
+      res.status(HttpStatusCode.OK).json({
+        status: STATUS.SUCCESS,
+        message: "Login successfully",
+        responseData: {token: token},
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({status: STATUS.FAIL, error: error.message });
     }
   }
 }
