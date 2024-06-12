@@ -1,5 +1,7 @@
 import { db, auth, Timestamp } from "../Configs/connectDB.js";
 import User from "../models/User.js";
+import HttpStatusCode from "../Exception/HttpStatusCode.js";
+import { STATUS } from "../Global/Constants.js";
 
 class UserController {
   async getAllUser(req, res, next) {
@@ -13,17 +15,22 @@ class UserController {
           doc.data().displayName,
           doc.data().email,
           doc.data().photoUrl,
-          doc.data().status
+          doc.data().status,
+          doc.data().create_at,
+          doc.data().update_at
         );
         userList.push(user);
       });
-      res.status(200).json({
+      res.status(HttpStatusCode.OK).json({
         Headers: { "Content-Type": "application/json" },
-        message: "success",
-        data: userList,
+        status: STATUS.SUCCESS,
+        message: "Get all users successfully",
+        responseData: userList,
       });
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ status: STATUS.FAIL, error: error.message });
     }
   }
 
@@ -32,16 +39,26 @@ class UserController {
       const { userId } = req.query;
       const user = await db.collection("users").doc(userId).get();
       if (!user) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res
+          .status(HttpStatusCode.BAD_REQUEST)
+          .json({ status: STATUS.FAIL, message: "fail", error: "Bad request" });
       } else {
         auth.updateUser(userId, {
           disabled: true,
         });
         await db.collection("users").doc(userId).update({ status: false });
-        res.status(200).json({ message: "success" });
+        res
+          .status(HttpStatusCode.OK)
+          .json({
+            Headers: { "Content-Type": "application/json" },
+            status: STATUS.SUCCESS,
+            message: "Block user successfully",
+          });
       }
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ status: STATUS.FAIL, error: error.message });
     }
   }
   async deleteUnverifiedUsers() {
