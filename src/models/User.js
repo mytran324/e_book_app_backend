@@ -4,13 +4,17 @@ class User {
     displayName,
     email,
     photoUrl,
-    status
+    status,
+    create_at,
+    update_at,
   ) {
     this.id = id;
     this.displayName = displayName;
     this.email = email;
     this.photoUrl = photoUrl;
     this.status = status;
+    this.create_at = create_at;
+    this.update_at = update_at;
   }
 }
 export default User;

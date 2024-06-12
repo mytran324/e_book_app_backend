@@ -11,7 +11,10 @@ class AdminController {
     try {
       const data = await db.collection("admin").doc(req.user.id).get();
       if (!data.exists) {
-        res.status(HttpStatusCode.BAD_REQUEST).json({status: STATUS.FAIL, error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          error: "Bad request",
+        });
       } else {
         const admin = new Admin(
           data.id,
@@ -20,14 +23,18 @@ class AdminController {
           data.data().passWord,
           data.data().status
         );
-        res
-          .status(HttpStatusCode.OK)
-          .json({ status: STATUS.SUCCESS, message: "Get profile admin successfully", responseData: admin });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Get profile admin successfully",
+          responseData: admin,
+        });
       }
     } catch (error) {
-      res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({ status: STATUS.FAIL, error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        error: error.message,
+      });
     }
   }
 
@@ -43,9 +50,10 @@ class AdminController {
         .get();
 
       if (auth.empty) {
-        return res
-          .status(HttpStatusCode.BAD_REQUEST)
-          .json({ status: STATUS.FAIL, error: Exception.WRONG_EMAIL_OR_PASSWORD });
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          error: Exception.WRONG_EMAIL_OR_PASSWORD,
+        });
       }
 
       let admin;
@@ -64,19 +72,23 @@ class AdminController {
         .where("passWord", "==", passWord)
         .get();
       if (passwordMatch.empty) {
-        return res
-          .status(HttpStatusCode.BAD_REQUEST)
-          .json({ status: STATUS.FAIL, error: Exception.WRONG_EMAIL_OR_PASSWORD });
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          error: Exception.WRONG_EMAIL_OR_PASSWORD,
+        });
       }
 
       let token = createToken(admin);
       res.status(HttpStatusCode.OK).json({
+        Headers: { "Content-Type": "application/json" },
         status: STATUS.SUCCESS,
         message: "Login successfully",
-        responseData: {token: token},
+        responseData: { token: token },
       });
     } catch (error) {
-      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({status: STATUS.FAIL, error: error.message });
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ status: STATUS.FAIL, error: error.message });
     }
   }
 }
