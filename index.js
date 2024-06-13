@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(morgan("combined"));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-  if (req.path !== "/api/admin/login" && !req.path.startsWith("/api-docs")) {
+  if (req.path !== "/api/admin/login" && !req.path.startsWith("/api-docs") && req.path !== "/api/admin/checkToken") {
     verifyToken(req, res, next);
   } else {
     next();
