@@ -28,6 +28,25 @@ const router = Router();
 router.get("/profile/", adminController.getProfile);
 /**
  * @openapi
+ * /api/admin/checkToken:
+ *   get:
+ *     tags: [Admin]
+ *     description: Check token
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/checkToken/", adminController.checkToken);
+/**
+ * @openapi
  * /api/admin/login:
  *   post:
  *     tags: [Admin]

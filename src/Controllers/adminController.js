@@ -4,7 +4,8 @@ import createToken from "../middleware/createToken.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import Exception from "../Exception/Exception.js";
 import { STATUS } from "../Global/Constants.js";
-
+import { config } from "dotenv";
+import jwt from "jsonwebtoken";
 class AdminController {
   // api/admin/profile
   async getProfile(req, res, next) {
@@ -90,6 +91,27 @@ class AdminController {
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
         .json({ status: STATUS.FAIL, error: error.message });
     }
+  }
+
+  // api/admin/checkToken
+  async checkToken(req, res, next) {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.json(false);
+    }
+
+    // Extract and verify the token
+    jwt.verify(
+      token.replace("Bearer ", ""),
+      process.env.SECRET_KEY,
+      (err, decoded) => {
+        if (err) {
+          return res.json(false);
+        }
+
+        return res.json(true);
+      }
+    );
   }
 }
 
