@@ -28,9 +28,11 @@ class UserController {
         responseData: userList,
       });
     } catch (error) {
-      res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({ status: STATUS.FAIL, error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get all users failure",
+        error: error.message,
+      });
     }
   }
 
@@ -39,26 +41,30 @@ class UserController {
       const { userId } = req.query;
       const user = await db.collection("users").doc(userId).get();
       if (!user) {
-        res
-          .status(HttpStatusCode.BAD_REQUEST)
-          .json({ status: STATUS.FAIL, message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Block user failure",
+          error: "Bad request",
+        });
       } else {
         auth.updateUser(userId, {
           disabled: true,
         });
         await db.collection("users").doc(userId).update({ status: false });
-        res
-          .status(HttpStatusCode.OK)
-          .json({
-            Headers: { "Content-Type": "application/json" },
-            status: STATUS.SUCCESS,
-            message: "Block user successfully",
-          });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Block user successfully",
+        });
       }
     } catch (error) {
       res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({ status: STATUS.FAIL, error: error.message });
+        .json({
+          status: STATUS.FAIL,
+          message: "Block user failure",
+          error: error.message,
+        });
     }
   }
   async deleteUnverifiedUsers() {
