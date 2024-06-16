@@ -1,12 +1,14 @@
 import { db, bucket, getDownloadURL, Timestamp } from "../Configs/connectDB.js";
 import Book from "../models/Book.js";
 import diacritic from "diacritic";
+import HttpStatusCode from "../Exception/HttpStatusCode.js";
+import { STATUS } from "../Global/Constants.js";
 
 class BookController {
   // api/book
   async getAllBook(req, res, next) {
     try {
-      const bookRef = await db.collection("book");
+      const bookRef = db.collection("book");
       const data = await bookRef.get();
       const bookList = [];
       data.docs.forEach((doc) => {
@@ -27,15 +29,18 @@ class BookController {
         );
         bookList.push(book);
       });
-      res
-        .status(200)
-        .json({
-          Headers: { "Content-Type": "application/json" },
-          message: "success",
-          data: bookList,
-        });
+      res.status(HttpStatusCode.OK).json({
+        Headers: { "Content-Type": "application/json" },
+        status: STATUS.SUCCESS,
+        message: "Get all books successfully",
+        responseData: bookList,
+      });
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get all books failure",
+        error: error.message,
+      });
     }
   }
 
@@ -56,9 +61,11 @@ class BookController {
         !imageUrlReq ||
         imageUrlReq.length === 0
       ) {
-        return res
-          .status(400)
-          .json({ message: "fail", error: "Both image fields are required." });
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Add book failure",
+          error: "Both image fields are required.",
+        });
       }
 
       const uploadFile = async (file, destinationArray) => {
@@ -128,12 +135,18 @@ class BookController {
       };
       const newBook = await db.collection("book").add(book);
 
-      res
-        .status(201)
-        .json({ message: "success", data: { id: newBook.id, ...book } });
+      res.status(HttpStatusCode.INSERT_OK).json({
+        Headers: { "Content-Type": "application/json" },
+        status: STATUS.SUCCESS,
+        message: "Add book successfully",
+        responseData: { id: newBook.id, ...book },
+      });
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
-      console.log(error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Add book failure",
+        error: error.message,
+      });
     }
   }
 
@@ -144,7 +157,11 @@ class BookController {
       const bookRef = await db.collection("book").doc(bookId);
       const data = await bookRef.get();
       if (!data.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Get book failure",
+          error: "Bad request",
+        });
       } else {
         const book = new Book(
           bookId,
@@ -161,10 +178,19 @@ class BookController {
           data.data().chapters,
           data.data().country
         );
-        res.status(200).json({ message: "success", data: book });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Get book successfully",
+          responseData: book,
+        });
       }
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get book failure",
+        error: error.message,
+      });
     }
   }
 
@@ -217,7 +243,11 @@ class BookController {
       const bookRef = await db.collection("book").doc(bookId);
       const book = await bookRef.get();
       if (!book.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Update book failure",
+          error: "Bad request",
+        });
       } else {
       }
     } catch (error) {}
@@ -229,16 +259,28 @@ class BookController {
       const { bookId } = req.query;
       const book = await db.collection("book").doc(bookId).get();
       if (!book.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Delete book failure",
+          error: "Bad request",
+        });
       } else {
         const data = {
           status: false,
         };
         await db.collection("book").doc(bookId).update(data);
-        res.status(200).json({ message: "success" });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Delete book successfully",
+        });
       }
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Delete book failure",
+        error: error.message,
+      });
     }
   }
 
@@ -248,13 +290,25 @@ class BookController {
       const { bookId } = req.query;
       const book = await db.collection("book").doc(bookId).get();
       if (!book.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Remove book failure",
+          error: "Bad request",
+        });
       } else {
         await db.collection("book").doc(bookId).delete();
-        res.status(200).json({ message: "success" });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Remove book successfully",
+        });
       }
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Remove book failure",
+        error: error.message,
+      });
     }
   }
   // api/book/topBook
@@ -274,9 +328,18 @@ class BookController {
         };
         bookViews.push(bookView);
       }
-      res.status(200).json({ message: "success", data: bookViews });
+      res.status(HttpStatusCode.OK).json({
+        Headers: { "Content-Type": "application/json" },
+        status: STATUS.SUCCESS,
+        message: "Get view books successfully",
+        responseData: bookViews,
+      });
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get view books failure",
+        error: error.message,
+      });
     }
   }
 
@@ -285,11 +348,20 @@ class BookController {
     try {
       const histories = await db.collection("histories").get();
       console.log(histories);
-      res
-        .status(200)
-        .json({ message: "success", data: { totalViews: histories.size } });
+      res.status(HttpStatusCode.OK).json({
+        Headers: { "Content-Type": "application/json" },
+        status: STATUS.SUCCESS,
+        message: "Get total views successfully",
+        responseData: { totalViews: histories.size },
+      });
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({
+          status: STATUS.FAIL,
+          message: "Get total views failure",
+          error: error.message,
+        });
     }
   }
 }

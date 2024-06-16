@@ -1,11 +1,13 @@
 import { db } from "../Configs/connectDB.js";
 import Author from "../models/Author.js";
+import HttpStatusCode from "../Exception/HttpStatusCode.js";
+import { STATUS } from "../Global/Constants.js";
 
 class AuthorController {
   // api/author (get all)
   async getAllAuthor(req, res, next) {
     try {
-      const authorRef = await db.collection("author");
+      const authorRef = db.collection("author");
       const data = await authorRef.get();
       const authorList = [];
       data.docs.forEach((doc) => {
@@ -16,13 +18,18 @@ class AuthorController {
         );
         authorList.push(author);
       });
-      res.status(200).json({
+      res.status(HttpStatusCode.OK).json({
         Headers: { "Content-Type": "application/json" },
-        message: "success",
-        data: authorList,
+        status: STATUS.SUCCESS,
+        message: "Get all author successfully",
+        responseData: authorList,
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get all author failure",
+        error: error.message,
+      });
     }
   }
   // api/author/add
@@ -30,31 +37,51 @@ class AuthorController {
     try {
       const data = req.body;
       const newAuthor = await db.collection("author").add(data);
-      res
-        .status(201)
-        .json({ message: "success", data: { id: newAuthor.id, ...data } });
+      res.status(HttpStatusCode.INSERT_OK).json({
+        Headers: { "Content-Type": "application/json" },
+        status: STATUS.SUCCESS,
+        message: "Add author successfully",
+        responseData: { id: newAuthor.id, ...data },
+      });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatusCode.INSERT_OK).json({
+        status: STATUS.FAIL,
+        message: "Add author failure",
+        error: error.message,
+      });
     }
   }
   // api/author/get
   async getAuthor(req, res, next) {
     try {
       const { authorId } = req.query;
-      const authorRef = await db.collection("author").doc(authorId);
+      const authorRef = db.collection("author").doc(authorId);
       const data = await authorRef.get();
       if (!data.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Get author failure",
+          error: "Bad request",
+        });
       } else {
         const author = new Author(
           data.id,
           data.data().fullName,
           data.data().status
         );
-        res.status(200).json({ message: "success", data: author });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Get author successfully",
+          responseData: author,
+        });
       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get author failure",
+        error: error.message,
+      });
     }
   }
 
@@ -66,13 +93,25 @@ class AuthorController {
       const data = req.body;
       const author = await db.collection("author").doc(authorId).get();
       if (!author.exists) {
-        res.status(400).json({ error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Update author failure",
+          error: "Bad request",
+        });
       } else {
         await db.collection("author").doc(authorId).update(data);
-        res.status(200).json({ message: "success" });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Update author successfully",
+        });
       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Update author successfully",
+        error: error.message,
+      });
     }
   }
 
@@ -84,14 +123,26 @@ class AuthorController {
       console.log(authorId);
       const author = await db.collection("author").doc(authorId).get();
       if (!author.exists) {
-        res.status(400).json({ error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Delete author failure",
+          error: "Bad request",
+        });
       } else {
         const data = { status: false };
         await db.collection("author").doc(authorId).update(data);
-        res.status(200).json({ message: "success" });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Delete author successfully",
+        });
       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Delete author failure",
+        error: error.message,
+      });
     }
   }
 }

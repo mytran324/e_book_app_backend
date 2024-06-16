@@ -2,7 +2,6 @@ import { db } from "../Configs/connectDB.js";
 import Admin from "../models/Admin.js";
 import createToken from "../middleware/createToken.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
-import Exception from "../Exception/Exception.js";
 import { STATUS } from "../Global/Constants.js";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
@@ -14,6 +13,7 @@ class AdminController {
       if (!data.exists) {
         res.status(HttpStatusCode.BAD_REQUEST).json({
           status: STATUS.FAIL,
+          message: "Get profile admin failure",
           error: "Bad request",
         });
       } else {
@@ -34,6 +34,7 @@ class AdminController {
     } catch (error) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
         status: STATUS.FAIL,
+        message: "Get profile admin failure",
         error: error.message,
       });
     }
@@ -53,6 +54,7 @@ class AdminController {
       if (auth.empty) {
         return res.status(HttpStatusCode.BAD_REQUEST).json({
           status: STATUS.FAIL,
+          message: "Login failure",
           error: Exception.WRONG_EMAIL_OR_PASSWORD,
         });
       }
@@ -75,6 +77,7 @@ class AdminController {
       if (passwordMatch.empty) {
         return res.status(HttpStatusCode.BAD_REQUEST).json({
           status: STATUS.FAIL,
+          message: "Login failure",
           error: Exception.WRONG_EMAIL_OR_PASSWORD,
         });
       }
@@ -89,7 +92,11 @@ class AdminController {
     } catch (error) {
       res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({ status: STATUS.FAIL, error: error.message });
+        .json({
+          status: STATUS.FAIL,
+          message: "Login failure",
+          error: error.message,
+        });
     }
   }
 

@@ -1,5 +1,7 @@
 import { db, bucket, getDownloadURL } from "../Configs/connectDB.js";
 import Category from "../models/Category.js";
+import HttpStatusCode from "../Exception/HttpStatusCode.js";
+import { STATUS } from "../Global/Constants.js";
 
 class CategoryController {
   // api/category
@@ -17,9 +19,18 @@ class CategoryController {
         );
         categoryList.push(category);
       });
-      res.status(200).json({ message: "success", data: categoryList });
+      res.status(HttpStatusCode.OK).json({
+        Headers: { "Content-Type": "application/json" },
+        status: STATUS.SUCCESS,
+        message: "Get all category successfully",
+        responseData: categoryList,
+      });
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get all category failure",
+        error: error.message,
+      });
     }
   }
 
@@ -70,14 +81,17 @@ class CategoryController {
         status: data.status,
       };
       const newCategory = await db.collection("category").add(category);
-      res
-        .status(201)
-        .json({
-          message: "success",
-          data: { id: newCategory.id, ...category },
-        });
+      res.status(HttpStatusCode.INSERT_OK).json({
+        status: STATUS.SUCCESS,
+        message: "Add category successfully",
+        responseData: { id: newCategory.id, ...category },
+      });
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Add category failure",
+        error: error.message,
+      });
     }
   }
 
@@ -85,10 +99,14 @@ class CategoryController {
   async getCategory(req, res, next) {
     try {
       const { categoryId } = req.query;
-      const categoryRef = await db.collection("category").doc(categoryId);
+      const categoryRef = db.collection("category").doc(categoryId);
       const data = await categoryRef.get();
       if (!data.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Get category failure",
+          error: "Bad request",
+        });
       } else {
         const category = new Category(
           data.id,
@@ -96,10 +114,19 @@ class CategoryController {
           data.data().status,
           data.data().imageUrl
         );
-        res.status(200).json({ message: "success", data: category });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Get category successfully",
+          responseData: category,
+        });
       }
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get category failure",
+        error: error.message,
+      });
     }
   }
 
@@ -118,7 +145,11 @@ class CategoryController {
         }
       }
       if (!category.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Update category failure",
+          error: "Bad request",
+        });
       } else {
         if (req.file) {
           await new Promise((resolve, reject) => {
@@ -145,10 +176,18 @@ class CategoryController {
           });
         }
         await db.collection("category").doc(categoryId).update(data);
-        res.status(200).json({ message: "success" });
+        res.status(HttpStatusCode.OK).json({
+          Headers: { "Content-Type": "application/json" },
+          status: STATUS.SUCCESS,
+          message: "Update category successfully",
+        });
       }
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Update category failure",
+        error: error.message,
+      });
       console.log(error);
     }
   }
@@ -160,7 +199,11 @@ class CategoryController {
       const categoryRef = await db.collection("category").doc(categoryId);
       const category = await categoryRef.get();
       if (!category.exists) {
-        res.status(400).json({ message: "fail", error: "Bad request" });
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          status: STATUS.FAIL,
+          message: "Delete category failure",
+          error: "Bad request",
+        });
       } else {
         const bookRef = await db
           .collection("book")
@@ -173,11 +216,19 @@ class CategoryController {
         for (const doc of bookRef.docs) {
           await db.collection("book").doc(doc.id).update({ status: false });
         }
-        res.status(200).json({ message: "success" });
+        res.status(HttpStatusCode.OK).json({
+          status: STATUS.SUCCESS,
+          message: "Delete category successfully",
+        });
       }
     } catch (error) {
-      res.status(500).json({ message: "fail", error: error.message });
-      console.log(error);
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({
+          status: STATUS.FAIL,
+          message: "Delete category failure",
+          error: error.message,
+        });
     }
   }
 }
