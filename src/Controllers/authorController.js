@@ -1,7 +1,8 @@
-import { db } from "../Configs/connectDB.js";
+import { db, Timestamp } from "../Configs/connectDB.js";
 import Author from "../models/Author.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import { STATUS } from "../Global/Constants.js";
+import { update } from "firebase/database";
 
 class AuthorController {
   // api/author (get all)
@@ -14,7 +15,9 @@ class AuthorController {
         const author = new Author(
           doc.id,
           doc.data().fullName,
-          doc.data().status
+          doc.data().status,
+          doc.data().create_at,
+          doc.data().update_at
         );
         authorList.push(author);
       });
@@ -35,7 +38,9 @@ class AuthorController {
   // api/author/add
   async addAuthor(req, res, next) {
     try {
-      const data = req.body;
+      let data = req.body;
+      data.create_at = Timestamp.now();
+      data.update_at = Timestamp.now();
       const newAuthor = await db.collection("author").add(data);
       res.status(HttpStatusCode.INSERT_OK).json({
         Headers: { "Content-Type": "application/json" },
@@ -67,7 +72,9 @@ class AuthorController {
         const author = new Author(
           data.id,
           data.data().fullName,
-          data.data().status
+          data.data().status,
+          data.data().create_at,
+          data.data().update_at
         );
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },
@@ -99,6 +106,7 @@ class AuthorController {
           error: "Bad request",
         });
       } else {
+        data.update_at = Timestamp.now();
         await db.collection("author").doc(authorId).update(data);
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },
@@ -109,7 +117,7 @@ class AuthorController {
     } catch (error) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
         status: STATUS.FAIL,
-        message: "Update author successfully",
+        message: "Update author failure",
         error: error.message,
       });
     }
@@ -129,7 +137,7 @@ class AuthorController {
           error: "Bad request",
         });
       } else {
-        const data = { status: false };
+        const data = { status: false, update_at: Timestamp.now() };
         await db.collection("author").doc(authorId).update(data);
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },

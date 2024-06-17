@@ -1,4 +1,4 @@
-import { db, bucket, getDownloadURL } from "../Configs/connectDB.js";
+import { db, bucket, getDownloadURL, Timestamp } from "../Configs/connectDB.js";
 import Category from "../models/Category.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import { STATUS } from "../Global/Constants.js";
@@ -15,7 +15,9 @@ class CategoryController {
           doc.id,
           doc.data().name,
           doc.data().status,
-          doc.data().imageUrl
+          doc.data().imageUrl,
+          doc.data().create_at,
+          doc.data().update_at
         );
         categoryList.push(category);
       });
@@ -79,6 +81,8 @@ class CategoryController {
         imageUrl: imageUrl[0],
         name: data.name,
         status: data.status,
+        create_at: Timestamp.now(),
+        update_at: Timestamp.now(),
       };
       const newCategory = await db.collection("category").add(category);
       res.status(HttpStatusCode.INSERT_OK).json({
@@ -112,7 +116,9 @@ class CategoryController {
           data.id,
           data.data().name,
           data.data().status,
-          data.data().imageUrl
+          data.data().imageUrl,
+          data.data().create_at,
+          data.data().update_at
         );
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },
@@ -175,6 +181,7 @@ class CategoryController {
             blobStream.end(req.file.buffer);
           });
         }
+        data.update_at = Timestamp.now();
         await db.collection("category").doc(categoryId).update(data);
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },
@@ -212,7 +219,7 @@ class CategoryController {
         await db
           .collection("category")
           .doc(categoryId)
-          .update({ status: false });
+          .update({ status: false, update_at: Timestamp.now() });
         for (const doc of bookRef.docs) {
           await db.collection("book").doc(doc.id).update({ status: false });
         }
@@ -222,13 +229,11 @@ class CategoryController {
         });
       }
     } catch (error) {
-      res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({
-          status: STATUS.FAIL,
-          message: "Delete category failure",
-          error: error.message,
-        });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Delete category failure",
+        error: error.message,
+      });
     }
   }
 }
