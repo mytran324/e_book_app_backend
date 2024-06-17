@@ -50,7 +50,10 @@ class UserController {
         auth.updateUser(userId, {
           disabled: true,
         });
-        await db.collection("users").doc(userId).update({ status: false });
+        await db
+          .collection("users")
+          .doc(userId)
+          .update({ status: false, update_at: Timestamp.now() });
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },
           status: STATUS.SUCCESS,
@@ -58,13 +61,11 @@ class UserController {
         });
       }
     } catch (error) {
-      res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({
-          status: STATUS.FAIL,
-          message: "Block user failure",
-          error: error.message,
-        });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Block user failure",
+        error: error.message,
+      });
     }
   }
   async deleteUnverifiedUsers() {

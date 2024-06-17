@@ -25,7 +25,9 @@ class BookController {
           doc.data().title,
           doc.data().bookPreview,
           doc.data().chapters,
-          doc.data().country
+          doc.data().country,
+          doc.data().create_at,
+          doc.data().update_at
         );
         bookList.push(book);
       });
@@ -132,6 +134,8 @@ class BookController {
         publishDate: timestampValue,
         status: false,
         title: data.title,
+        create_at: Timestamp.now(),
+        update_at: Timestamp.now(),
       };
       const newBook = await db.collection("book").add(book);
 
@@ -176,7 +180,9 @@ class BookController {
           data.data().title,
           data.data().bookPreview,
           data.data().chapters,
-          data.data().country
+          data.data().country,
+          data.data().create_at,
+          data.data().update_at
         );
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },
@@ -267,6 +273,7 @@ class BookController {
       } else {
         const data = {
           status: false,
+          update_at: Timestamp.now(),
         };
         await db.collection("book").doc(bookId).update(data);
         res.status(HttpStatusCode.OK).json({
@@ -355,13 +362,11 @@ class BookController {
         responseData: { totalViews: histories.size },
       });
     } catch (error) {
-      res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({
-          status: STATUS.FAIL,
-          message: "Get total views failure",
-          error: error.message,
-        });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Get total views failure",
+        error: error.message,
+      });
     }
   }
 }

@@ -12,7 +12,9 @@ class Book {
     title,
     bookPreview,
     chapters,
-    country
+    country,
+    create_at,
+    update_at
   ) {
     (this.id = id),
       (this.authodId = authodId),
@@ -26,7 +28,9 @@ class Book {
       (this.title = title),
       (this.bookPreview = bookPreview),
       (this.chapters = chapters),
-      (this.country = country);
+      (this.country = country),
+      (this.create_at = create_at),
+      (this.update_at = update_at);
   }
 }
 

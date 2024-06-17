@@ -1,4 +1,4 @@
-import { db } from "../Configs/connectDB.js";
+import { Timestamp, db } from "../Configs/connectDB.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import { STATUS } from "../Global/Constants.js";
 import Chapters from "../models/Chapters.js";
@@ -13,7 +13,9 @@ class ChaptersController {
         const chapters = new Chapters(
           doc.id,
           doc.data().bookId,
-          doc.data().chapterList
+          doc.data().chapterList,
+          doc.data().create_at,
+          doc.data().update_at
         );
         listChapters.push(chapters);
       });
@@ -47,6 +49,8 @@ class ChaptersController {
         const chapters = {
           bookId: bookId,
           chapterList: data.chapterList,
+          create_at: Timestamp.now(),
+          update_at: Timestamp.now(),
         };
         await db.collection("chapters").add(chapters);
         await db.collection("book").doc(bookId).update({ status: true });
@@ -56,13 +60,11 @@ class ChaptersController {
         });
       }
     } catch (error) {
-      res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({
-          status: STATUS.SUCCESS,
-          message: "Add chapters failure",
-          error: error.message,
-        });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.SUCCESS,
+        message: "Add chapters failure",
+        error: error.message,
+      });
     }
   }
 }
