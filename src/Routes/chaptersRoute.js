@@ -9,7 +9,7 @@ const router = Router();
  */
 /**
  * @openapi
- * /api/chapter:
+ * /api/chapters:
  *   get:
  *     tags: [Chapters]
  *     description: Get list chapters
