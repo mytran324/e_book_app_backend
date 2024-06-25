@@ -14,6 +14,6 @@ router.use("/book", bookRoutes);
 router.use("/category", categoryRoutes);
 router.use("/chapters", chaptersRoutes);
 router.use("/user", userRoutes);
-router.use("mission", missionRoutes);
+router.use("/mission", missionRoutes);
 
 export default router;

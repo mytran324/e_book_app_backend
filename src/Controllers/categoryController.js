@@ -128,11 +128,7 @@ class CategoryController {
         });
       }
     } catch (error) {
-      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-        status: STATUS.FAIL,
-        message: "Get category failure",
-        error: error.message,
-      });
+      cccccc
     }
   }
 

@@ -1,6 +1,6 @@
 class Mission {
   constructor(
-    missionId,
+    id,
     coins,
     detail,
     name,
@@ -9,7 +9,7 @@ class Mission {
     create_at,
     update_at
   ) {
-    (this.missionId = missionId),
+    (this.id = id),
       (this.coins = coins),
       (this.detail = detail),
       (this.name = name),
