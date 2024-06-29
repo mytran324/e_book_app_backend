@@ -331,7 +331,10 @@ class BookController {
           .get();
         const bookView = {
           bookId: bookDoc.id,
-          views: bookViewSnapshot.size,
+          views: bookViewSnapshot.docs.reduce(
+            (sum, item) => sum + item.data().times,
+            0
+          ),
         };
         bookViews.push(bookView);
       }
