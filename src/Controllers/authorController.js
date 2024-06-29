@@ -2,7 +2,6 @@ import { db, Timestamp } from "../Configs/connectDB.js";
 import Author from "../models/Author.js";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import { STATUS } from "../Global/Constants.js";
-import { update } from "firebase/database";
 
 class AuthorController {
   // api/author (get all)
