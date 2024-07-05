@@ -5,6 +5,7 @@ class User {
     email,
     photoUrl,
     status,
+    deviceToken,
     create_at,
     update_at,
   ) {
@@ -13,6 +14,7 @@ class User {
     this.email = email;
     this.photoUrl = photoUrl;
     this.status = status;
+    this.deviceToken = deviceToken;
     this.create_at = create_at;
     this.update_at = update_at;
   }
