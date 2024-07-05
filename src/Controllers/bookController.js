@@ -1,5 +1,7 @@
 import { db, bucket, getDownloadURL, Timestamp } from "../Configs/connectDB.js";
 import Book from "../models/Book.js";
+import Category from "../models/Category.js";
+import Author from "../models/Author.js";
 import diacritic from "diacritic";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import { STATUS } from "../Global/Constants.js";

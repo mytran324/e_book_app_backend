@@ -6,6 +6,8 @@ import categoryRoutes from "./categoryRoute.js";
 import chaptersRoutes from "./chaptersRoute.js";
 import userRoutes from "./userRoute.js";
 import missionRoutes from "./missionRoute.js";
+// import coinsRoutes from "./coinsRoute.js";
+import notificationRoutes from "./notificationRoute.js";
 const router = Router();
 
 router.use("/admin", adminRoutes);
@@ -15,5 +17,8 @@ router.use("/category", categoryRoutes);
 router.use("/chapters", chaptersRoutes);
 router.use("/user", userRoutes);
 router.use("/mission", missionRoutes);
+// router.use("/coins", coinsRoutes);
+router.use("/notification", notificationRoutes);
+
 
 export default router;

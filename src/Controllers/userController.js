@@ -16,6 +16,7 @@ class UserController {
           doc.data().email,
           doc.data().photoUrl,
           doc.data().status,
+          doc.data().deviceToken,
           doc.data().create_at,
           doc.data().update_at
         );
