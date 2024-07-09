@@ -128,7 +128,6 @@ class CategoryController {
         });
       }
     } catch (error) {
-      cccccc
     }
   }
 

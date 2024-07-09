@@ -18,6 +18,7 @@ class MissionController {
           doc.data().name,
           doc.data().times,
           doc.data().type,
+          doc.data().status,
           doc.data().create_at,
           doc.data().update_at
         );
@@ -79,6 +80,7 @@ class MissionController {
           data.data().name,
           data.data().times,
           data.data().type,
+          data.data().status,
           data.data().create_at,
           data.data().update_at
         );

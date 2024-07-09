@@ -18,6 +18,12 @@ const upload = multer({ storage: memoryStorage() });
  *     description: Get list book
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: currentPage
+ *         in: query
+ *         required: false
+ *         schema:
+ *            type: int
  *     responses:
  *       200:
  *         description: Success
