@@ -34,18 +34,37 @@ class BookController {
           authorData.data().create_at,
           authorData.data().update_at
         );
+        // get views
+        var bookReadViews = 0;
+        var bookListenViews = 0;
+        const bookReadViewSnapshot = await db
+          .collection("histories")
+          .where("chapters", "==", doc.id)
+          .get();
+        bookReadViews = bookReadViewSnapshot.docs.reduce(
+          (sum, item) => sum + item.data().times,
+          0
+        );
+        const bookListenViewSnapshot = await db
+          .collection("histories_audio")
+          .where("bookId", "==", doc.id)
+          .get();
+        bookListenViews = bookListenViewSnapshot.docs.reduce(
+          (sum, item) => sum + item.data().times,
+          0
+        );
         const bookResponse = new BookResponse(
           doc.id,
           author,
           doc.data().price,
           doc.data().title,
+          bookReadViews + bookListenViews,
           doc.data().create_at,
           doc.data().update_at
         );
 
         bookList.push(bookResponse);
       }
-
       res.status(HttpStatusCode.OK).json({
         Headers: { "Content-Type": "application/json" },
         status: STATUS.SUCCESS,
