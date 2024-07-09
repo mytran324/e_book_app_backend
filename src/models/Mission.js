@@ -6,6 +6,7 @@ class Mission {
     name,
     times,
     type,
+    status,
     create_at,
     update_at
   ) {
@@ -15,6 +16,7 @@ class Mission {
       (this.name = name),
       (this.times = times),
       (this.type = type),
+      (this.status = status)
       (this.create_at = create_at),
       (this.update_at = update_at);
   }

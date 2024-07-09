@@ -2,42 +2,55 @@ import { db, bucket, getDownloadURL, Timestamp } from "../Configs/connectDB.js";
 import Book from "../models/Book.js";
 import Category from "../models/Category.js";
 import Author from "../models/Author.js";
+import BookResponse from "../responses/bookResponse.js";
 import diacritic from "diacritic";
 import HttpStatusCode from "../Exception/HttpStatusCode.js";
 import { STATUS } from "../Global/Constants.js";
+import Chapters from "../models/Chapters.js";
+import Audio from "../models/Audio.js";
+import BookDetailResponse from "../responses/bookDetailResponse.js";
 
 class BookController {
   // api/book
   async getAllBook(req, res, next) {
     try {
-      const bookRef = db.collection("book");
+      const { currentPage } = req.query;
+      const totalBook = await db.collection("book").count().get();
+      const bookRef = db
+        .collection("book")
+        .offset((currentPage - 1) * 5)
+        .limit(5);
       const data = await bookRef.get();
       const bookList = [];
-      data.docs.forEach((doc) => {
-        const book = new Book(
+
+      for (const doc of data.docs) {
+        // Get author
+        const authorRef = db.collection("author").doc(doc.data().authodId);
+        const authorData = await authorRef.get();
+        const author = new Author(
+          authorData.id,
+          authorData.data().fullName,
+          authorData.data().status,
+          authorData.data().create_at,
+          authorData.data().update_at
+        );
+        const bookResponse = new BookResponse(
           doc.id,
-          doc.data().authodId,
-          doc.data().categoryId,
-          doc.data().description,
-          doc.data().imageUrl,
-          doc.data().language,
+          author,
           doc.data().price,
-          doc.data().publishDate,
-          doc.data().status,
           doc.data().title,
-          doc.data().bookPreview,
-          doc.data().chapters,
-          doc.data().country,
           doc.data().create_at,
           doc.data().update_at
         );
-        bookList.push(book);
-      });
+
+        bookList.push(bookResponse);
+      }
+
       res.status(HttpStatusCode.OK).json({
         Headers: { "Content-Type": "application/json" },
         status: STATUS.SUCCESS,
         message: "Get all books successfully",
-        responseData: bookList,
+        responseData: { data: bookList, totalBook: totalBook.data().count },
       });
     } catch (error) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
@@ -160,7 +173,7 @@ class BookController {
   async getBook(req, res, next) {
     try {
       const { bookId } = req.query;
-      const bookRef = await db.collection("book").doc(bookId);
+      const bookRef = db.collection("book").doc(bookId);
       const data = await bookRef.get();
       if (!data.exists) {
         res.status(HttpStatusCode.BAD_REQUEST).json({
@@ -169,10 +182,76 @@ class BookController {
           error: "Bad request",
         });
       } else {
-        const book = new Book(
+        const authorRef = db.collection("author").doc(data.data().authodId);
+        const authorData = await authorRef.get();
+        const author = new Author(
+          authorData.id,
+          authorData.data().fullName,
+          authorData.data().status,
+          authorData.data().create_at,
+          authorData.data().update_at
+        );
+
+        // Get category
+        const categoryList = [];
+        for (const cate of data.data().categoryId) {
+          const categoryRef = db.collection("category").doc(cate);
+          const categoryData = await categoryRef.get();
+          const category = new Category(
+            categoryData.id,
+            categoryData.data().name,
+            categoryData.data().status,
+            categoryData.data().imageUrl,
+            categoryData.data().create_at,
+            categoryData.data().update_at
+          );
+          categoryList.push(category);
+        }
+
+        // Get list of chapters
+        let chapters = [];
+        const chaptersRef = await db
+          .collection("chapters")
+          .where("bookId", "==", bookId)
+          .get();
+        if (!chaptersRef.empty) {
+          chaptersRef.docs.forEach((chapterDoc) => {
+            chapters.push(
+              new Chapters(
+                chapterDoc.id,
+                chapterDoc.data().bookId,
+                chapterDoc.data().chapterList,
+                chapterDoc.data().create_at,
+                chapterDoc.data().update_at
+              )
+            );
+          });
+        }
+
+        // Get list of audios
+        let audios = [];
+        const audiosRef = await db
+          .collection("audio")
+          .where("bookId", "==", bookId)
+          .get();
+        if (!audiosRef.empty) {
+          audiosRef.docs.forEach((audioDoc) => {
+            audios.push(
+              new Audio(
+                audioDoc.id,
+                audioDoc.data().bookId,
+                audioDoc.data().audioList,
+                audioDoc.data().create_at,
+                audioDoc.data().update_at
+              )
+            );
+          });
+        }
+
+        const bookDetailResponse = new BookDetailResponse(
           bookId,
-          data.data().authodId,
-          data.data().categoryId,
+          author,
+          categoryList,
           data.data().description,
           data.data().imageUrl,
           data.data().language,
@@ -183,20 +262,22 @@ class BookController {
           data.data().bookPreview,
           data.data().chapters,
           data.data().country,
+          chapters,
+          audios,
           data.data().create_at,
           data.data().update_at
         );
         res.status(HttpStatusCode.OK).json({
           Headers: { "Content-Type": "application/json" },
           status: STATUS.SUCCESS,
-          message: "Get book successfully",
-          responseData: book,
+          message: "Get book detail successfully",
+          responseData: bookDetailResponse,
         });
       }
     } catch (error) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
         status: STATUS.FAIL,
-        message: "Get book failure",
+        message: "Get book detail failure",
         error: error.message,
       });
     }
