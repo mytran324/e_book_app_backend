@@ -228,41 +228,37 @@ class BookController {
         }
 
         // Get list of chapters
-        let chapters = [];
+        let chapters = null;
         const chaptersRef = await db
           .collection("chapters")
           .where("bookId", "==", bookId)
           .get();
         if (!chaptersRef.empty) {
           chaptersRef.docs.forEach((chapterDoc) => {
-            chapters.push(
-              new Chapters(
-                chapterDoc.id,
-                chapterDoc.data().bookId,
-                chapterDoc.data().chapterList,
-                chapterDoc.data().create_at,
-                chapterDoc.data().update_at
-              )
+            chapters = new Chapters(
+              chapterDoc.id,
+              chapterDoc.data().bookId,
+              chapterDoc.data().chapterList,
+              chapterDoc.data().create_at,
+              chapterDoc.data().update_at
             );
           });
         }
 
         // Get list of audios
-        let audios = [];
+        let audios = null;
         const audiosRef = await db
           .collection("audio")
           .where("bookId", "==", bookId)
           .get();
         if (!audiosRef.empty) {
           audiosRef.docs.forEach((audioDoc) => {
-            audios.push(
-              new Audio(
-                audioDoc.id,
-                audioDoc.data().bookId,
-                audioDoc.data().audioList,
-                audioDoc.data().create_at,
-                audioDoc.data().update_at
-              )
+            audios = new Audio(
+              audioDoc.id,
+              audioDoc.data().bookId,
+              audioDoc.data().audioList,
+              audioDoc.data().create_at,
+              audioDoc.data().update_at
             );
           });
         }
