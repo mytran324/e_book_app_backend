@@ -90,13 +90,11 @@ class AdminController {
         responseData: { token: token },
       });
     } catch (error) {
-      res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({
-          status: STATUS.FAIL,
-          message: "Login failure",
-          error: error.message,
-        });
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: STATUS.FAIL,
+        message: "Login failure",
+        error: error.message,
+      });
     }
   }
 
