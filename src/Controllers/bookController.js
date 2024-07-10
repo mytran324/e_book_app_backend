@@ -256,7 +256,7 @@ class BookController {
             audios = new Audio(
               audioDoc.id,
               audioDoc.data().bookId,
-              audioDoc.data().audioList,
+              audioDoc.data().chapterList,
               audioDoc.data().create_at,
               audioDoc.data().update_at
             );
