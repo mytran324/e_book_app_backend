@@ -63,7 +63,7 @@ router.get("/checkToken/", adminController.checkToken);
  *                  email:
  *                      type: string
  *                      description: The admin's email.
- *                      example: mytran20110324@gmail.com
+ *                      example: mytran070202@gmail.com
  *                  password:
  *                      type: string
  *                      description: The admin's password.

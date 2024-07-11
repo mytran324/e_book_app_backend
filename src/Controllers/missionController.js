@@ -7,7 +7,7 @@ class MissionController {
   // api/mission
   async getAllMissions(req, res, next) {
     try {
-      const missionRef = db.collection("mission");
+      const missionRef = db.collection("mission").where("status", "==", true);
       const data = await missionRef.get();
       const missionList = [];
       data.docs.forEach((doc) => {

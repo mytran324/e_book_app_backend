@@ -8,7 +8,7 @@ class NotificationController {
   async sendNotificationAll(req, res, next) {
     try {
       const { title, body } = req.body;
-      const userRef = await db.collection("users");
+      const userRef = db.collection("users").where("status", "==", true);
       const data = await userRef.get();
       let registrationTokens = [];
       data.docs.forEach((doc) => {

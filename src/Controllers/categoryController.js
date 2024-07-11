@@ -7,7 +7,7 @@ class CategoryController {
   // api/category
   async getAllCategory(req, res, next) {
     try {
-      const categoryRef = await db.collection("category");
+      const categoryRef = db.collection("category").where("status", "==", true);
       const data = await categoryRef.get();
       const categoryList = [];
       data.docs.forEach((doc) => {

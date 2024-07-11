@@ -6,7 +6,7 @@ import { STATUS } from "../Global/Constants.js";
 class UserController {
   async getAllUser(req, res, next) {
     try {
-      const userRef = await db.collection("users");
+      const userRef = db.collection("users").where("status", '==', true);
       const data = await userRef.get();
       const userList = [];
       data.docs.forEach((doc) => {

@@ -164,7 +164,7 @@ class BookController {
         description: data.description,
         imageUrl: imageUrlBook[0],
         language: data.language,
-        price: 0,
+        price: data.price,
         publishDate: timestampValue,
         status: false,
         title: data.title,
