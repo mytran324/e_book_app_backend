@@ -45,6 +45,7 @@ class MissionController {
       const data = req.body;
       data.create_at = Timestamp.now();
       data.update_at = Timestamp.now();
+      data.status = true;
       const newMission = await db.collection("mission").add(data);
       res.status(HttpStatusCode.INSERT_OK).json({
         Headers: { "Content-Type": "application/json" },
