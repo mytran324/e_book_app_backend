@@ -164,7 +164,7 @@ class BookController {
         description: data.description,
         imageUrl: imageUrlBook[0],
         language: data.language,
-        price: data.price,
+        price: parseInt(data.price, 10),
         publishDate: timestampValue,
         status: false,
         title: data.title,
