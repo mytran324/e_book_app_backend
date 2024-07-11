@@ -51,7 +51,9 @@ class AudioController {
         });
       } else {
         const uploadFile = async (name, file, destinationArray) => {
-          const folderName = diacritic.clean(book.data().title.split(" ").join(""));
+          const folderName = diacritic.clean(
+            book.data().title.split(" ").join("")
+          );
           const fileName = `book_content_music/${folderName}/${Date.now()}_${
             file.originalname
           }`;
@@ -83,14 +85,14 @@ class AudioController {
           chapterList: audioList,
           create_at: Timestamp.now(),
           update_at: Timestamp.now(),
-        }
-        await db.collection("audio").add(newAudios);
-        await db.collection("book").doc(bookId).update({ status: true });
+        };
         await Promise.all(
           data.map(async (item) => {
             await uploadFile(item.fieldname, item, audioList);
           })
         );
+        await db.collection("audio").add(newAudios);
+        await db.collection("book").doc(bookId).update({ status: true });
         res.status(HttpStatusCode.INSERT_OK).json({
           status: STATUS.SUCCESS,
           message: "Add Audios successfully",
