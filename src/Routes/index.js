@@ -10,6 +10,7 @@ import missionRoutes from "./missionRoute.js";
 import notificationRoutes from "./notificationRoute.js";
 import statisticRoutes from "./statisticRoute.js";
 import audioRoutes from "./audioRoute.js";
+import contactRoutes from "./contactRoute.js";
 const router = Router();
 
 router.use("/admin", adminRoutes);
@@ -23,5 +24,6 @@ router.use("/mission", missionRoutes);
 router.use("/notification", notificationRoutes);
 router.use("/statistic", statisticRoutes);
 router.use("/audio", audioRoutes);
+router.use("/contact", contactRoutes);
 
 export default router;
